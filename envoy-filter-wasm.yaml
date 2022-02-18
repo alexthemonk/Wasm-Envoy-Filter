@@ -4,36 +4,39 @@ metadata:
   name: envoy-filter-demo
   namespace: istio-system
 spec:
+  workloadSelector:
+    labels:
+      app: istio-ingressgateway
   configPatches:
-  - applyTo: EXTENSION_CONFIG
-    patch:
-      operation: ADD
-      value:
-        name: my-wasm-extension
-        typed_config:
-          "@type": type.googleapis.com/envoy.extensions.filters.http.wasm.v3.Wasm
-          config:
-            root_id: my-wasm-root-id
-            vm_config:
-              vm_id: my-wasm-vm-id
-              runtime: envoy.wasm.runtime.v8
-              code:
-                remote:
-                  http_uri:
-                    uri: http://my-wasm-binary-uri
-            configuration:
-              "@type": "type.googleapis.com/google.protobuf.StringValue"
-              value: |
-                {}
   - applyTo: HTTP_FILTER
     match:
       context: GATEWAY
     patch:
-      operation: ADD
-      filterClass: AUTHZ 
+      operation: INSERT_BEFORE
       value:
         name: my-wasm-extension 
         config_discovery:
           config_source:
             ads: {}
-          type_urls: ["envoy.extensions.filters.http.wasm.v3.Wasm"]
+            initial_fetch_timeout: 0s
+          type_urls: [ "type.googleapis.com/envoy.extensions.filters.http.wasm.v3.Wasm"]
+  - applyTo: EXTENSION_CONFIG
+    match:
+      context: GATEWAY
+    patch:
+      operation: ADD
+      value:
+        name: my-wasm-extension
+        typed_config:
+          "@type": type.googleapis.com/udpa.type.v1.TypedStruct
+          type_url: type.googleapis.com/envoy.extensions.filters.http.wasm.v3.Wasm
+          value:
+            config:
+              vm_config:
+                vm_id: basic-auth
+                runtime: envoy.wasm.runtime.v8
+                code:
+                  remote:
+                    http_uri:
+                      # uri: https://github.com/MeruFM/test-wasm/raw/main/envoy_filter_demo.wasm
+                      uri: https://github.com/alexthemonk/Wasm-Envoy-Filter/raw/master/test-wasm-plugin/helloworld.wasm
