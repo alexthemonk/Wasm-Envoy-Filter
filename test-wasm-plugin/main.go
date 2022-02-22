@@ -5,26 +5,16 @@ import (
 	"github.com/tetratelabs/proxy-wasm-go-sdk/proxywasm/types"
 )
 
-const (
-	tickMilliseconds uint32 = 1000
-)
-
 type (
 	vmContext struct {
-		// Embed the default VM context here,
-		// so that we don't need to reimplement all the methods.
 		types.DefaultVMContext
 	}
 
 	pluginContext struct {
-		// Embed the default plugin context here,
-		// so that we don't need to reimplement all the methods.
 		types.DefaultPluginContext
 	}
 
 	httpContext struct {
-		// Embed the default plugin context here,
-		// so that we don't need to reimplement all the methods.
 		types.DefaultHttpContext
 	}
 )
@@ -43,7 +33,7 @@ func (*pluginContext) NewHttpContext(uint32) types.HttpContext {
 	return &httpContext{}
 }
 
-func (ctx *httpContext) OnHttpRequestHeaders(int, bool) types.Action {
-	proxywasm.LogInfof("OnHttpRequestHeaders with ctx %v", ctx)
+func (*httpContext) OnHttpRequestHeaders(int, bool) types.Action {
+	proxywasm.LogInfo("OnHttpRequestHeaders")
 	return types.ActionContinue
 }
