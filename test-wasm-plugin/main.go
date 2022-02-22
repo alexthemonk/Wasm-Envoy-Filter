@@ -24,7 +24,7 @@ func main() {
 }
 
 // Override types.DefaultVMContext.
-func (*vmContext) NewPluginContext(contextID uint32) types.PluginContext {
+func (*vmContext) NewPluginContext(uint32) types.PluginContext {
 	return &pluginContext{}
 }
 
@@ -33,6 +33,7 @@ func (*pluginContext) NewHttpContext(uint32) types.HttpContext {
 	return &httpContext{}
 }
 
+// Override types.DefaultHttpContext.
 func (*httpContext) OnHttpRequestHeaders(int, bool) types.Action {
 	proxywasm.LogInfo("OnHttpRequestHeaders")
 	return types.ActionContinue

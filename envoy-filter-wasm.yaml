@@ -39,4 +39,4 @@ spec:
                   remote:
                     http_uri:
                       # uri: https://github.com/MeruFM/test-wasm/raw/main/envoy_filter_demo.wasm
-                      uri: https://github.com/alexthemonk/Wasm-Envoy-Filter/raw/master/test-wasm-plugin/helloworld.wasm
+                      uri: https://github.com/alexthemonk/Wasm-Envoy-Filter/raw/master/test-wasm-plugin/main.wasm
