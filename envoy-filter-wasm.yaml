@@ -1,43 +1,72 @@
+# apiVersion: networking.istio.io/v1alpha3
+# kind: EnvoyFilter
+# metadata:
+#   name: envoy-filter-demo
+#   namespace: istio-system
+# spec:
+#   workloadSelector:
+#     labels:
+#       app: istio-ingressgateway
+#   configPatches:
+#   - applyTo: HTTP_FILTER
+#     match:
+#       context: GATEWAY
+#     patch:
+#       operation: INSERT_BEFORE
+#       value:
+#         name: my-wasm-extension 
+#         config_discovery:
+#           config_source:
+#             ads: {}
+#             initial_fetch_timeout: 0s
+#           type_urls: [ "type.googleapis.com/envoy.extensions.filters.http.wasm.v3.Wasm"]
+#   - applyTo: EXTENSION_CONFIG
+#     match:
+#       context: GATEWAY
+#     patch:
+#       operation: ADD
+#       value:
+#         name: my-wasm-extension
+#         typed_config:
+#           "@type": type.googleapis.com/udpa.type.v1.TypedStruct
+#           type_url: type.googleapis.com/envoy.extensions.filters.http.wasm.v3.Wasm
+#           value:
+#             config:
+#               vm_config:
+#                 vm_id: basic-auth
+#                 runtime: envoy.wasm.runtime.v8
+#                 code:
+#                   remote:
+#                     http_uri:
+#                       # uri: https://github.com/MeruFM/test-wasm/raw/main/envoy_filter_demo.wasm
+#                       uri: https://github.com/alexthemonk/Wasm-Envoy-Filter/raw/master/test-wasm-plugin/envoy-filter.wasm
+#                       # uri: https://github.com/srikarrao/test-resources-access/raw/main/wasm/golang/header-filter/main.wasm
+
 apiVersion: networking.istio.io/v1alpha3
 kind: EnvoyFilter
 metadata:
-  name: envoy-filter-demo
+  name: wasm-service
   namespace: istio-system
 spec:
-  workloadSelector:
-    labels:
-      app: istio-ingressgateway
   configPatches:
-  - applyTo: HTTP_FILTER
-    match:
-      context: GATEWAY
-    patch:
-      operation: INSERT_BEFORE
-      value:
-        name: my-wasm-extension 
-        config_discovery:
-          config_source:
-            ads: {}
-            initial_fetch_timeout: 0s
-          type_urls: [ "type.googleapis.com/envoy.extensions.filters.http.wasm.v3.Wasm"]
-  - applyTo: EXTENSION_CONFIG
-    match:
-      context: GATEWAY
-    patch:
-      operation: ADD
-      value:
-        name: my-wasm-extension
-        typed_config:
-          "@type": type.googleapis.com/udpa.type.v1.TypedStruct
-          type_url: type.googleapis.com/envoy.extensions.filters.http.wasm.v3.Wasm
-          value:
-            config:
-              vm_config:
-                vm_id: basic-auth
-                runtime: envoy.wasm.runtime.v8
-                code:
-                  remote:
-                    http_uri:
-                      # uri: https://github.com/MeruFM/test-wasm/raw/main/envoy_filter_demo.wasm
-                      uri: https://github.com/alexthemonk/Wasm-Envoy-Filter/raw/master/test-wasm-plugin/envoy-filter.wasm
-                      # uri: https://github.com/srikarrao/test-resources-access/raw/main/wasm/golang/header-filter/main.wasm
+    - applyTo: HTTP_FILTER
+      patch:
+        operation: MERGE
+        value:
+          bootstrap_extensions:
+            - name: envoy.bootstrap.wasm
+              typed_config:
+                "@type": type.googleapis.com/envoy.extensions.wasm.v3.WasmService
+                singleton: true
+                config:
+                  name: test_config
+                  configuration:
+                    "@type": type.googleapis.com/google.protobuf.StringValue
+                    value: |
+                      {}
+                  vm_config:
+                    runtime: "envoy.wasm.runtime.v8"
+                    code:
+                      remote:
+                        http_uri:
+                          uri: https://github.com/alexthemonk/Wasm-Envoy-Filter/raw/master/test-wasm-plugin/envoy-filter.wasm
