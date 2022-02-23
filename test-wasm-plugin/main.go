@@ -24,7 +24,7 @@ func main() {
 }
 
 func (*vmContext) OnVMStart(vmConfigurationSize int) types.OnVMStartStatus {
-	proxywasm.LogCritical("Inside Go OnVMStart")
+	proxywasm.LogInfo("OnVMStart")
 
 	return types.OnVMStartStatusOK
 }
@@ -41,7 +41,7 @@ func (*pluginContext) NewHttpContext(uint32) types.HttpContext {
 
 // Override types.DefaultHttpContext.
 func (*httpContext) OnHttpRequestHeaders(int, bool) types.Action {
-	proxywasm.LogCritical("OnHttpRequestHeaders")
+	proxywasm.LogInfo("OnHttpRequestHeaders")
 	err := proxywasm.AddHttpRequestHeader("X-my-custom-header-asm", "hello alex world")
 	if err != nil {
 		proxywasm.LogCritical("failed to set request header")

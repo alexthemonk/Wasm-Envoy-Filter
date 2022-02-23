@@ -40,4 +40,3 @@ spec:
                     http_uri:
                       # uri: https://github.com/MeruFM/test-wasm/raw/main/envoy_filter_demo.wasm
                       uri: https://github.com/alexthemonk/Wasm-Envoy-Filter/raw/master/test-wasm-plugin/envoy-filter.wasm
-                      # uri: https://github.com/srikarrao/test-resources-access/raw/main/wasm/golang/header-filter/main.wasm
