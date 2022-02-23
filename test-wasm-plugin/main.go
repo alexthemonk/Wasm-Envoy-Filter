@@ -41,7 +41,7 @@ func (*pluginContext) NewHttpContext(uint32) types.HttpContext {
 
 // Override types.DefaultHttpContext.
 func (*httpContext) OnHttpRequestHeaders(int, bool) types.Action {
-	proxywasm.LogInfo("OnHttpRequestHeaders")
+	proxywasm.LogCritical("OnHttpRequestHeaders")
 	err := proxywasm.AddHttpRequestHeader("X-my-custom-header-asm", "hello alex world")
 	if err != nil {
 		proxywasm.LogCritical("failed to set request header")
