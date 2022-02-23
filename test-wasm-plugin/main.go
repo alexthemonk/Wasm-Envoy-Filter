@@ -23,6 +23,12 @@ func main() {
 	proxywasm.SetVMContext(&vmContext{})
 }
 
+func (*vmContext) OnVMStart(vmConfigurationSize int) types.OnVMStartStatus {
+	proxywasm.LogCritical("Inside Go OnVMStart")
+
+	return types.OnVMStartStatusOK
+}
+
 // Override types.DefaultVMContext.
 func (*vmContext) NewPluginContext(uint32) types.PluginContext {
 	return &pluginContext{}
