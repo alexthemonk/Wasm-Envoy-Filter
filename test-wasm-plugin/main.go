@@ -26,6 +26,8 @@ func main() {
 func (*vmContext) OnVMStart(vmConfigurationSize int) types.OnVMStartStatus {
 	proxywasm.LogInfo("OnVMStart")
 
+	proxywasm.LogCritical("Alex in OnVMStart!!!!")
+
 	return types.OnVMStartStatusOK
 }
 

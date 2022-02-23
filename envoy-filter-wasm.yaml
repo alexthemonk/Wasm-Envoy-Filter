@@ -14,7 +14,7 @@ spec:
     patch:
       operation: INSERT_BEFORE
       value:
-        name: my-wasm-extension 
+        name: wasm-http-extension
         config_discovery:
           config_source:
             ads: {}
@@ -26,7 +26,7 @@ spec:
     patch:
       operation: ADD
       value:
-        name: my-wasm-extension
+        name: wasm-http-extension
         typed_config:
           "@type": type.googleapis.com/udpa.type.v1.TypedStruct
           type_url: type.googleapis.com/envoy.extensions.filters.http.wasm.v3.Wasm
