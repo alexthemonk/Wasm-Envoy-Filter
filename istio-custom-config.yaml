@@ -1,0 +1,27 @@
+apiVersion: install.istio.io/v1alpha1
+kind: IstioOperator
+spec:
+  profile: demo
+  values:
+    global:
+      logging:
+        level: default:debug
+      proxy:
+        logLevel: info
+  components:
+    pilot:
+      enabled: true
+      k8s:
+        env:
+          - name: BOOTSTRAP_XDS_AGENT
+            value: "true"
+          - name: ENABLE_WASM_TELEMETRY
+            value: "true"
+        #- name: ISTIO_AGENT_ENABLE_WASM_REMOTE_LOAD_CONVERSION
+        #  value: true
+  meshConfig:
+    accessLogFile: /dev/stdout
+    accessLogEncoding: JSON
+    enableTracing: true
+    h2UpgradePolicy: UPGRADE
+    rootNamespace: istio-system

@@ -18,7 +18,7 @@ spec:
               "@type": type.googleapis.com/envoy.extensions.wasm.v3.WasmService
               singleton: true
               config:
-                name: test_config
+                name: wasm-bootstrap-extension
                 configuration:
                   "@type": type.googleapis.com/google.protobuf.StringValue
                   value: |
